@@ -12,6 +12,7 @@ sap.ui.define([
                 salesOrderChart : {
                     title : "년도 별 오더 수량",
                     year : [],
+                    selectedKey : "all",
                     group : [
                         {
                             key : "year",
@@ -26,9 +27,9 @@ sap.ui.define([
                         labels : [],
                         datasets : [],
                     },
-                    options : {}                    
                 }
             });
+            
             oView.setModel(oViewModel,"ViewModel");
             this.oViewModel = oView.getModel("ViewModel");
             
@@ -47,76 +48,93 @@ sap.ui.define([
                 });
                 aYear.unshift({key : "all",text : "All"});
                 this.oViewModel.setProperty("/salesOrderChart/year",aYear);
-                this.defaultChart();
+                this.onChartDataChange();
             })            
         },
-        defaultChart : function(){
-            const obj = {};
-            const aSales = this.oViewModel.getProperty("/sales");
-            aSales.forEach((sale)=>{
-                const dDate = sale.DeliveryDate;
-                const year = dDate.getFullYear();
-                obj[year] ? obj[year]+=Number(sale.Quantity) : obj[year] = Number(sale.Quantity);
-            });
+        // defaultChart : function(){
+        //     const obj = {};
+        //     const aSales = this.oViewModel.getProperty("/sales");
+        //     aSales.forEach((sale)=>{
+        //         const dDate = sale.DeliveryDate;
+        //         const year = dDate.getFullYear();
+        //         obj[year] ? obj[year]+=Number(sale.Quantity) : obj[year] = Number(sale.Quantity);
+        //     });
             
-            const oChartData = {
-                labels : Object.keys(obj).map(sYear=>`${sYear}년`),
+        //     const oChartData = {
+        //         labels : Object.keys(obj).map(sYear=>`${sYear}년`),
+        //         datasets : [{
+        //             label : "년도 별 오더 수량",
+        //             data : Object.values(obj),
+        //             borderColor: 'rgb(0, 103, 181)',
+        //             backgroundColor : 'rgb(0, 103, 181)',
+        //             tension: 0.1
+        //         }]
+        //     };
+            
+        //     this.oViewModel.setProperty("/salesOrderChart/data",oChartData);
+        // },
+        onChartDataChange : function(){
+            const sSelectedKey = this.oViewModel.getProperty("/salesOrderChart/selectedKey");
+            const oChartData = this.createChartData(sSelectedKey);
+            const aValue = Object.values(oChartData);
+            const oChart = {
+                labels : Object.keys(oChartData).map(sDate=> `${sDate}${sSelectedKey==="all" ? '년' : '월'}`),
                 datasets : [{
-                    label : "년도 별 오더 수량",
-                    data : Object.values(obj),
-                    borderColor: 'rgb(0, 103, 181)',
-                    backgroundColor : 'rgb(0, 103, 181)',
-                    tension: 0.1
-                }]
-            };
-
-            this.oViewModel.setProperty("/salesOrderChart/data",oChartData);
-        },
-        onChartDataChange : function(oEvent){
-            const obj = {};            
-            const sYear = oEvent.getSource().getSelectedKey();
-            const aSales = this.oViewModel.getProperty("/sales");
-            
-            if(sYear==="all") return this.defaultChart();
-            
-            aSales.forEach(oSales=>{
-                const dDate = oSales.DeliveryDate;
-                const year = dDate.getFullYear();
-                const month = dDate.getMonth()+1;
-                if(year.toString()===sYear){
-                    obj[month] ? obj[month]+=Number(oSales.Quantity) : obj[month] = Number(oSales.Quantity);
-                }
-            });
-
-            const oChartData = {
-                labels : Object.keys(obj).map(sMonth=>`${sMonth}월`),
-                datasets : [{
-                    label : `${sYear}년 오더수량`,
-                    data : Object.values(obj),
+                    label : `${sSelectedKey==="all" ? '총' : sSelectedKey}년도 오더수량`,
+                    data : aValue.map(data=>data.quantity),
+                    amount : aValue.map(data=>data.amount),
                     borderColor: 'rgb(0, 103, 181)',
                     backgroundColor : 'rgb(0, 103, 181)',
                     tension: 0.1
                 }]                
             };
 
-            const oOptions =  {
-                tooltips : {
-                    callbacks : {
-                        label: function(tooltipItem, data) {
-                            console.log(tooltipItem,data);
-                        },
-                        title: function(tooltipItem, data) {
-                            console.log(tooltipItem,data);
-                        },
-                        afterLabel : (tooltipItem,data)=>{
-                            onsole.log(tooltipItem,data);
+            const oChartOptions =  {
+                plugins : {
+                    tooltip : {
+                        enabled: true,
+                        callbacks : {
+                            title: () => '',
+                            label: tooltipItem => {
+                                return ` ${tooltipItem.label} 오더수량 ${tooltipItem.dataset.data[tooltipItem.dataIndex]}`;
+                            },
+                            afterLabel : tooltipItem => {
+                                return ` 총액 ${Math.floor(tooltipItem.dataset.amount[tooltipItem.dataIndex])}`;
+                            }
                         }
                     }
-                }
-            }
+                }                
+            };
             
-            this.oViewModel.setProperty("/salesOrderChart/data",oChartData);
-            this.oViewModel.setProperty("/salesOrderChart/options",oOptions);
-        }
+            this.oViewModel.setProperty("/salesOrderChart/data",oChart);
+            this.oViewModel.setProperty("/salesOrderChart/options",oChartOptions);
+        },
+        createChartData : function(sSelectedKey){
+            const oChartData = {};
+            const aSales = this.oViewModel.getProperty("/sales");         
+            
+            aSales.forEach(oSales=>{
+                const dDate = oSales.DeliveryDate;
+                const iYear = dDate.getFullYear();
+                const iMonth = dDate.getMonth()+1;
+                const chartDataStructure = (sDate) => {
+                    if(oChartData[sDate]){
+                        oChartData[sDate].quantity+=Number(oSales.Quantity);
+                        oChartData[sDate].amount+=Number(oSales.GrossAmount);
+                        return;
+                    }
+
+                    oChartData[sDate] = {
+                       quantity : Number(oSales.Quantity),
+                       amount : Number(oSales.GrossAmount)
+                    };
+                };
+
+                if(sSelectedKey==="all") return chartDataStructure(iYear);
+                                
+                if(iYear.toString()===sSelectedKey) chartDataStructure(iMonth);                
+            });
+            return oChartData;
+        },
     })
 });

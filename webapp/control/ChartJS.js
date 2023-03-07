@@ -39,7 +39,7 @@ sap.ui.define([
 		setOptions : function(oOptions){
 			this.setProperty("options",oOptions,true);
 			if ( this.__chart ) {
-				this.__chart.data.options = oOptions;
+				this.__chart.options = oOptions;
 			}
 			this.updateChart();
 		},

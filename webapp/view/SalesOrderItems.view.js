@@ -81,8 +81,8 @@ sap.ui.define([
                     toolbar : new sap.m.OverflowToolbar({
                         content : [
                             new sap.m.ComboBox({
-                                selectedKey : "all",
-                                change : (oEvent)=>oController.onChartDataChange(oEvent),
+                                selectedKey : "{ViewModel>/salesOrderChart/selectedKey}",
+                                change : ()=>oController.onChartDataChange(),
                                 items : {
                                     path : "ViewModel>/salesOrderChart/year",
                                     template : new sap.ui.core.ListItem({

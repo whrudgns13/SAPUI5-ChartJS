@@ -5,13 +5,14 @@ sap.ui.define([
 	"use strict";
 	return Control.extend("es5.control.ChartJS", {
 		metadata : {
+			library : "es5.control",
 			properties : {
-				type :{type : "string", group : "Appearance", defaultValue : null},
-				labels : {type : "string[]", group : "Appearance", defaultValue : null},
-				datasets : {type : "object[]",  group : "Appearance", defaultValue : undefined},
-				height : {type : "string",  group : "Appearance", defaultValue : undefined},
-				width : {type : "string", group : "Appearance", defaultValue : undefined},
-				options : {type : "object", group : "Appearance", defaultValue : undefined}
+				type :{type : "string", defaultValue : null},
+				labels : {type : "object", multiple : true, defaultValue : null},
+				datasets : {type : "object", multiple : true, defaultValue : undefined},
+				height : {type : "string", defaultValue : undefined},
+				width : {type : "string", defaultValue : undefined},
+				options : {type : "object", multiple : true, defaultValue : undefined}
 			}
 		},
 		init : function () {},
@@ -49,22 +50,20 @@ sap.ui.define([
 			}
 		},
 		renderer : function (oRM, oControl) {
-			oRM.write("<canvas");
-			oRM.writeControlData(oControl);
-			oRM.addClass("chart__padding");
+			oRM.write("<canvas");			//태그시작
+			oRM.writeControlData(oControl);	//id 추가
+			oRM.addClass("chart__padding");	//class추가
 			// this.addOuterClasses(oRM, oControl);
-			oRM.writeClasses();
-			oRM.write(">");
+			oRM.writeClasses();				//class 끝
+			oRM.write(">");					//태그닫기
 			
-			if (oControl.getHeight() !== undefined && oControl.getHeight() !== null) {
-				oRM.addStyle("height", oControl.getHeight());
-			}
-			if (oControl.getWidth() !== undefined && oControl.getWidth() !== null) {
-				oRM.addStyle("width", oControl.getWidth());
-			}
-			oRM.writeStyles();
+			//스타일 추가
+			if (oControl.getHeight()) oRM.addStyle("height", oControl.getHeight());			
+			if (oControl.getWidth()) oRM.addStyle("width", oControl.getWidth());
 			
-			oRM.write("</canvas>");
+			oRM.writeStyles();	//스타일 닫기
+			
+			oRM.write("</canvas>");	//태그 종료
 		},
 		onAfterRendering : function(){
 			this.__chart = new Chart(document.querySelector(`#${this.getId()}`),{
@@ -75,9 +74,6 @@ sap.ui.define([
 				},
 				options : this.getOptions()
 			});
-		},
-		onBeforeRendering : function(){
-			
 		}
 	});
 });

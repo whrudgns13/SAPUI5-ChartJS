@@ -1,7 +1,6 @@
 sap.ui.define([
     "./BaseController",
     "../lib/Chart",
-    "es5/control/ChartJS"
 ], function(Controller) {
     'use strict';
     return Controller.extend("es5.controller.SalesOrderItems",{
@@ -51,28 +50,6 @@ sap.ui.define([
                 this.onChartDataChange();
             })            
         },
-        // defaultChart : function(){
-        //     const obj = {};
-        //     const aSales = this.oViewModel.getProperty("/sales");
-        //     aSales.forEach((sale)=>{
-        //         const dDate = sale.DeliveryDate;
-        //         const year = dDate.getFullYear();
-        //         obj[year] ? obj[year]+=Number(sale.Quantity) : obj[year] = Number(sale.Quantity);
-        //     });
-            
-        //     const oChartData = {
-        //         labels : Object.keys(obj).map(sYear=>`${sYear}년`),
-        //         datasets : [{
-        //             label : "년도 별 오더 수량",
-        //             data : Object.values(obj),
-        //             borderColor: 'rgb(0, 103, 181)',
-        //             backgroundColor : 'rgb(0, 103, 181)',
-        //             tension: 0.1
-        //         }]
-        //     };
-            
-        //     this.oViewModel.setProperty("/salesOrderChart/data",oChartData);
-        // },
         onChartDataChange : function(){
             const sSelectedKey = this.oViewModel.getProperty("/salesOrderChart/selectedKey");
             const oChartData = this.createChartData(sSelectedKey);
@@ -131,7 +108,7 @@ sap.ui.define([
                 };
 
                 if(sSelectedKey==="all") return chartDataStructure(iYear);
-                                
+
                 if(iYear.toString()===sSelectedKey) chartDataStructure(iMonth);                
             });
             return oChartData;

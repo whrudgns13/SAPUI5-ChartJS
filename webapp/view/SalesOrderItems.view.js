@@ -14,10 +14,7 @@ sap.ui.define([
                     template : new sap.m.ColumnListItem({
                         cells : [
                             new sap.m.Text({text : "{ViewModel>SalesOrderID}"}),
-                            // new sap.m.Text({text : "{ViewModel>NetAmount}"}),
-                            // new sap.m.Text({text : "{ViewModel>TaxAmount}"}),
                             new sap.m.Text({text : "{ViewModel>GrossAmount}"}),
-                            // new sap.m.Text({text : "{ViewModel>CurrencyCode}"}),
                             new sap.m.Text({text : "{ViewModel>Quantity}"}),
                             new sap.m.Text({
                                 text : {
@@ -34,22 +31,10 @@ sap.ui.define([
                     new sap.m.Column({
                         header : new sap.m.Label({text : "SalesOrderID"})
                     }),
-                    // new sap.m.Column({
-                    //     hAlign : "End",
-                    //     header : new sap.m.Label({text : "NetAmount"})
-                    // }),
-                    // new sap.m.Column({
-                    //     hAlign : "End",
-                    //     header : new sap.m.Label({text : "TaxAmount"})
-                    // }),
                     new sap.m.Column({
                         hAlign : "End",
                         header : new sap.m.Label({text : "GrossAmount"})
                     }),
-                    // new sap.m.Column({
-                    //     hAlign : "Center",
-                    //     header : new sap.m.Label({text : "Currency"})
-                    // }),
                     new sap.m.Column({
                         width : "5rem",
                         hAlign : "End",
@@ -82,7 +67,7 @@ sap.ui.define([
                         content : [
                             new sap.m.ComboBox({
                                 selectedKey : "{ViewModel>/salesOrderChart/selectedKey}",
-                                change : ()=>oController.onChartDataChange(),
+                                change : () => oController.onChartDataChange(),
                                 items : {
                                     path : "ViewModel>/salesOrderChart/year",
                                     template : new sap.ui.core.ListItem({
@@ -99,7 +84,8 @@ sap.ui.define([
                         type : "line",
                         labels : "{ViewModel>/salesOrderChart/data/labels}",
                         datasets : "{ViewModel>/salesOrderChart/data/datasets}",
-                        options : "{ViewModel>/salesOrderChart/options}"
+                        options : "{ViewModel>/salesOrderChart/options}",
+                        height : 200
                     })
                 ]
             });
@@ -112,7 +98,13 @@ sap.ui.define([
                 }),
                 items :[
                     oTableCard,
-                    oChartCard
+                    oChartCard,
+                    new es5.control.CustomControl({
+                        content : [
+                            new sap.m.Text({text : "hello world"}),
+                            new sap.m.Text({text : "hello world2"})
+                        ],
+                    })
                 ]
             });
 

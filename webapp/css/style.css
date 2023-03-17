@@ -36,3 +36,23 @@
 .chart__padding{
     padding : 20px;
 }
+
+.custom--contextmeun{
+    position: absolute;
+    z-index: 20;
+    background-color: white;
+    display: none;
+    box-shadow: 10px 5px 5px gray;
+}
+
+.custom--contextmeun__content{
+    display: flex;
+    align-items: center;
+    margin:5px;
+    background-color: aqua;
+    padding: 30px 50px;
+}
+
+.custom--contextmeun__content span{
+    cursor : pointer;
+}

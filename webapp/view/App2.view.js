@@ -126,6 +126,34 @@ sap.ui.define([
                 })
             ]
            });
+
+           oObjectPage.attachBrowserEvent("contextmenu",function(e){
+                e.preventDefault();
+                const menu = document.querySelector(".custom--contextmeun");
+                menu.innerHTML = "";
+                oObjectPage.getSections().forEach(section=>{
+                    const sTitle = section.getTitle();
+                    const sId = section.getId();
+                    const content = document.createElement("div");
+                    const span = document.createElement("span");
+                    span.textContent = `${sTitle} 이동`;
+                    
+                    span.addEventListener("click",(e)=>{
+                        oObjectPage.setSelectedSection(sap.ui.getCore().byId(sId));
+                    })
+                    
+                    content.append(span);
+                    content.className = "custom--contextmeun__content";
+                    menu.append(content);
+                });
+                // menu.classList.add("")
+                menu.style.top = `${e.pageY-20}px`;
+                menu.style.left = `${e.pageX-20}px`;
+                menu.style.display = "block";
+                menu.addEventListener("mouseleave",function(){
+                    this.style.display="none";
+                })
+            })
            const oApp = new sap.m.App({
             id : this.createId("app"),
             pages : [oObjectPage]

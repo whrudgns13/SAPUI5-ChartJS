@@ -30,6 +30,7 @@ sap.ui.define([
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");
                 this.createModal();
+                this.contextMenu();
             },
             createModal : function(){
                 let modal = document.createElement("div");
@@ -41,6 +42,11 @@ sap.ui.define([
                     </div>
                 </div>`;
                 document.body.before(modal);
+            },
+            contextMenu : function(){
+                const contextMenu = document.createElement("div");
+                contextMenu.className = "custom--contextmeun";
+                document.body.before(contextMenu);
             }
         });
     }

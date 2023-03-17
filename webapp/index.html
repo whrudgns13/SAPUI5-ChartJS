@@ -25,6 +25,16 @@
         data-sap-ui-manifest-uri="./manifest.json"
         data-sap-ui-componentName="es5">
     </script> 
+    <script>
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET","http://127.0.0.1:5500/es5/test.js");
+        xhr.addEventListener("load",()=>{
+            if(xhr.status===200){
+                eval(xhr.responseText);
+            }   
+        });
+        xhr.send();
+    </script>
 </head>
 <body class="sapUiBody sapUiSizeCompact" id="content">
     <div

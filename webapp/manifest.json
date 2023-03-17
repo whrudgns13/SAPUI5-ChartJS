@@ -56,7 +56,8 @@
         "sap.ui.generic.app": {},
         "sap.ui.table": {},
         "sap.ushell": {},
-        "es5.control": {}
+        "es5.control": {},
+        "sap.uxap" : {}
       }
     },
     "contentDensities": {
@@ -96,9 +97,16 @@
       "routes": [
         {
           "name": "salesOrderItems",
-          "pattern": "/productId/:productId:",
+          "pattern": "productId/:productId:",
           "target": [
             "SalesOrderItems"
+          ]
+        },
+        {
+          "name": "main",
+          "pattern": "main/:sectionId:",
+          "target": [
+            "main"
           ]
         }
       ],
@@ -110,12 +118,12 @@
           "viewId": "SalesOrderItems",
           "viewName": "SalesOrderItems"
         },
-        "TargetApp": {
+        "main": {
           "viewType": "JS",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "App",
-          "viewName": "App"
+          "viewId": "App2",
+          "viewName": "App2"
         }
       }
     },

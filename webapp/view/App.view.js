@@ -3,6 +3,9 @@ sap.ui.jsview("es5.view.App",{
         return "es5.controller.App"
     },
     createContent : function(oController){
+        // oController.getRouter().navTo("main",{
+        //     sectionId : ""
+        // })
         const oPage = new sap.f.DynamicPage({
             title : new sap.f.DynamicPageTitle({
                 heading : new sap.m.Title({

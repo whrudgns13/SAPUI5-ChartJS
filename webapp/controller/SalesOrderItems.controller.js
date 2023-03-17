@@ -55,7 +55,7 @@ sap.ui.define([
             const oChartData = this.createChartData(sSelectedKey);
             const aValue = Object.values(oChartData);
             const oChart = {
-                labels : Object.keys(oChartData).map(sDate=> `${sDate}${sSelectedKey==="all" ? '년' : '월'}`),
+                labels : Object.keys(oChartData).map(sDate => `${sDate}${sSelectedKey==="all" ? '년' : '월'}`),
                 datasets : [{
                     label : `${sSelectedKey==="all" ? '총' : sSelectedKey}년도 오더수량`,
                     data : aValue.map(data=>data.quantity),
@@ -108,7 +108,6 @@ sap.ui.define([
                 };
 
                 if(sSelectedKey==="all") return chartDataStructure(iYear);
-
                 if(iYear.toString()===sSelectedKey) chartDataStructure(iMonth);                
             });
             return oChartData;
